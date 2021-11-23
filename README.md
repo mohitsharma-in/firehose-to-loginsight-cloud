@@ -33,6 +33,7 @@ Flags:
   --insight-server=INSIGHT-SERVER  
                                log insight server address
   --insight-server-port=9543   log insight server port
+  --insight-server-token="Token here"   log insight server port
   --insight-reserved-fields="event_type"  
                                comma delimited list of fields that are reserved
   --insight-agent-id="1"       agent id for log insight
@@ -129,7 +130,7 @@ cf login -a https://api.[your cf system domain] -u [your id] --skip-ssl-validati
 
 ## Push firehose-to-loginsight.
 ```bash
-cf push firehose-to-loginsight -c ./firehose-to-loginsight -b binary_buildpack -u none --no-start
+cf push firehose-to-loginsight -c ./firehose-to-loginsight -b binary_buildpack -u process --no-start
 ```
 
 ## Set environment variables with cf cli or in the [manifest.yml](./manifest.yml).
@@ -138,6 +139,7 @@ cf push firehose-to-loginsight -c ./firehose-to-loginsight -b binary_buildpack -
 cf set-env firehose-to-loginsight API_ENDPOINT https://api.[your cf system domain]
 cf set-env firehose-to-loginsight INSIGHT_SERVER [Your Log Insight IP]
 cf set-env firehose-to-loginsight INSIGHT_SERVER_PORT [Your Log Insight Ingestion Port, defaults to 9543]
+cf set-env firehose-to-loginsight INSIGHT_SERVER_TOKEN [Your Log Insight Token]
 cf set-env firehose-to-loginsight LOG_EVENT_TOTALS true
 cf set-env firehose-to-loginsight LOG_EVENT_TOTALS_TIME "10s"
 cf set-env firehose-to-loginsight SKIP_SSL_VALIDATION true
