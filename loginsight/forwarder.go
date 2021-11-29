@@ -22,8 +22,8 @@ type Forwarder struct {
 }
 
 //NewForwarder - Creates new instance of LogInsight that implments logging.Logging interface
-func NewForwarder(logInsightServer string, logInsightPort int, logInsightServerToken string, logInsightReservedFields,
-	logInsightAgentID string, logInsightHasJsonLogMsg, debugging bool, concurrentWorkers int, insecureSkipVerify bool) logging.Logging {
+func NewForwarder(logInsightServer string, logInsightPort int, logInsightServerToken string, logInsightReservedFields string,
+ logInsightHasJsonLogMsg, debugging bool, concurrentWorkers int, insecureSkipVerify bool) logging.Logging {
 
 	url := fmt.Sprintf("https://%s:%d/le-mans/v1/streams/ingestion-pipeline-stream", logInsightServer, logInsightPort)
 	logging.LogStd(fmt.Sprintf("Using %s for log insight", url), true)
@@ -73,50 +73,65 @@ func (f *Forwarder) ShipEvents(eventFields map[string]interface{}, msg string) {
 	}
 	f.channel <- channelMessage
 }
+//func (f *Forwarder) ConsumeMessages() {
+//	log := make(map[string]string)
+//	for channelMessage := range f.channel {
+//		//messages := Messages{}
+//		//message := Message{
+//		//	Text: channelMessage.msg,
+//		//}
+//		log["log"] = channelMessage.msg
+//		fmt.Println(channelMessage)
+//		for k, v := range channelMessage.eventFields {
+//			if k == "timestamp" {
+//				//message.Timestamp = v.(int64)
+//
+//
+//			} else {
+//				//message.Fields = append(message.Fields, Field{Name: f.CreateKey(k), Content: fmt.Sprint(v)})
+//				log[k] = v.(string)
+//			}
+//		}
+//
+//		if f.hasJSONLogMsg {
+//
+//			var obj map[string]interface{}
+//			msgbytes := []byte(channelMessage.msg)
+//			err := json.Unmarshal(msgbytes, &obj)
+//			if err == nil {
+//				for k, v := range obj {
+//					//message.Fields = append(message.Fields, Field{Name: f.CreateKey(k), Content: fmt.Sprint(v)})
+//					log[k] = v.(string)
+//				}
+//			} else {
+//				logging.LogError("Error unmarshalling", err)
+//				return
+//			}
+//		}
+//
+//		//messages.Messages = append(messages.Messages, message)
+//		payload ,err := json.Marshal(log)
+//		if err == nil {
+//			f.Post(*f.url,*f.token ,payload)
+//		} else {
+//			logging.LogError("Error marshalling", err)
+//		}
+//	}
+//}
+
 func (f *Forwarder) ConsumeMessages() {
-	log := make(map[string]string)
 	for channelMessage := range f.channel {
-		messages := Messages{}
-		message := Message{
-			Text: channelMessage.msg,
-		}
-		log["log"] = channelMessage.msg
-
-		for k, v := range channelMessage.eventFields {
-			if k == "timestamp" {
-				message.Timestamp = v.(int64)
-
-			} else {
-				//message.Fields = append(message.Fields, Field{Name: f.CreateKey(k), Content: fmt.Sprint(v)})
-				log[k] = v.(string)
-			}
-		}
-
-		if f.hasJSONLogMsg {
-
-			var obj map[string]interface{}
-			msgbytes := []byte(channelMessage.msg)
-			err := json.Unmarshal(msgbytes, &obj)
-			if err == nil {
-				for k, v := range obj {
-					//message.Fields = append(message.Fields, Field{Name: f.CreateKey(k), Content: fmt.Sprint(v)})
-					log[k] = v.(string)
-				}
-			} else {
-				logging.LogError("Error unmarshalling", err)
-				return
-			}
-		}
-
-		messages.Messages = append(messages.Messages, message)
-		payload ,err := json.Marshal(log)
+		channelMessage.eventFields["log"] = channelMessage.msg
+		Logdata,err := json.Marshal(channelMessage.eventFields)
+		//fmt.Println(fmt.Sprintf("%s",Logdata))
 		if err == nil {
-			f.Post(*f.url,*f.token ,payload)
+			f.Post(*f.url,*f.token ,Logdata)
 		} else {
 			logging.LogError("Error marshalling", err)
 		}
 	}
 }
+
 
 func (f *Forwarder) Post(url string, token string, payload []byte) {
 	if f.debug {

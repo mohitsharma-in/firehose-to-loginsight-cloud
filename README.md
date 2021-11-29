@@ -36,7 +36,6 @@ Flags:
   --insight-server-token="Token here"   log insight server port
   --insight-reserved-fields="event_type"  
                                comma delimited list of fields that are reserved
-  --insight-agent-id="1"       agent id for log insight
   --insight-has-json-log-msg   app log message can be json
   --concurrent-workers=50      number of concurrent workers pulling messages from channel
   --noop                       if it should avoid sending to log-insight

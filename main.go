@@ -37,7 +37,6 @@ var (
 	logInsightServerPort     = kingpin.Flag("insight-server-port", "log insight server port").Default("9543").OverrideDefaultFromEnvar("INSIGHT_SERVER_PORT").Int()
 	logInsightServerToken	 = kingpin.Flag("insight-server-token", "log insight server token").OverrideDefaultFromEnvar("INSIGHT_SERVER_TOKEN").String()
 	logInsightReservedFields = kingpin.Flag("insight-reserved-fields", "comma delimited list of fields that are reserved").Default("event_type").OverrideDefaultFromEnvar("INSIGHT_RESERVED_FIELDS").String()
-	logInsightAgentID        = kingpin.Flag("insight-agent-id", "agent id for log insight").Default("1").OverrideDefaultFromEnvar("INSIGHT_AGENT_ID").String()
 	logInsightHasJSONLogMsg  = kingpin.Flag("insight-has-json-log-msg", "app log message can be json").Default("false").OverrideDefaultFromEnvar("INSIGHT_HAS_JSON_LOG_MSG").Bool()
 	concurrentWorkers        = kingpin.Flag("concurrent-workers", "number of concurrent workers pulling messages from channel").Default("50").OverrideDefaultFromEnvar("CONCURRENT_WORKERS").Int()
 	noop                     = kingpin.Flag("noop", "if it should avoid sending to log-insight").Default("false").OverrideDefaultFromEnvar("INSIGHT_NOOP").Bool()
@@ -72,7 +71,7 @@ func main() {
 			log.Fatal("Must set insight-server property")
 			os.Exit(1)
 		}
-		loggingClient = loginsight.NewForwarder(*logInsightServer, *logInsightServerPort, *logInsightServerToken, *logInsightReservedFields, *logInsightAgentID, *logInsightHasJSONLogMsg, *debug, *concurrentWorkers, *skipSSLValidation)
+		loggingClient = loginsight.NewForwarder(*logInsightServer, *logInsightServerPort,*logInsightServerToken, *logInsightReservedFields, *logInsightHasJSONLogMsg, *debug, *concurrentWorkers, *skipSSLValidation)
 	} else {
 		loggingClient = loginsight.NewNoopForwarder()
 	}
