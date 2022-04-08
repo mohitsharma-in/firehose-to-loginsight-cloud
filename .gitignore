@@ -5,3 +5,5 @@ my.db
 run.sh
 .wercker
 test
+.idea
+bin
