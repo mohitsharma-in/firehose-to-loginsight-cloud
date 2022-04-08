@@ -16,18 +16,18 @@ type Forwarder struct {
 	LogInsightReservedFields []string
 	url                      *string
 	hasJSONLogMsg            bool
-	token					 *string
+	token                    *string
 	debug                    bool
 	channel                  chan *ChannelMessage
 }
 
 //NewForwarder - Creates new instance of LogInsight that implments logging.Logging interface
 func NewForwarder(logInsightServer string, logInsightPort int, logInsightServerToken string, logInsightReservedFields string,
- logInsightHasJsonLogMsg, debugging bool, concurrentWorkers int, insecureSkipVerify bool) logging.Logging {
+	logInsightHasJsonLogMsg, debugging bool, concurrentWorkers int, insecureSkipVerify bool) logging.Logging {
 
 	url := fmt.Sprintf("https://%s:%d/le-mans/v1/streams/ingestion-pipeline-stream", logInsightServer, logInsightPort)
 	logging.LogStd(fmt.Sprintf("Using %s for log insight", url), true)
-	token := fmt.Sprintf( "Bearer %s",logInsightServerToken)
+	token := fmt.Sprintf("Bearer %s", logInsightServerToken)
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: insecureSkipVerify}
 
 	theForwarder := &Forwarder{
@@ -35,7 +35,7 @@ func NewForwarder(logInsightServer string, logInsightPort int, logInsightServerT
 		url:                      &url,
 		hasJSONLogMsg:            logInsightHasJsonLogMsg,
 		debug:                    debugging,
-		token: 					  &token,
+		token:                    &token,
 		channel:                  make(chan *ChannelMessage, 1024),
 	}
 	for i := 0; i < concurrentWorkers; i++ {
@@ -73,73 +73,26 @@ func (f *Forwarder) ShipEvents(eventFields map[string]interface{}, msg string) {
 	}
 	f.channel <- channelMessage
 }
-//func (f *Forwarder) ConsumeMessages() {
-//	log := make(map[string]string)
-//	for channelMessage := range f.channel {
-//		//messages := Messages{}
-//		//message := Message{
-//		//	Text: channelMessage.msg,
-//		//}
-//		log["log"] = channelMessage.msg
-//		fmt.Println(channelMessage)
-//		for k, v := range channelMessage.eventFields {
-//			if k == "timestamp" {
-//				//message.Timestamp = v.(int64)
-//
-//
-//			} else {
-//				//message.Fields = append(message.Fields, Field{Name: f.CreateKey(k), Content: fmt.Sprint(v)})
-//				log[k] = v.(string)
-//			}
-//		}
-//
-//		if f.hasJSONLogMsg {
-//
-//			var obj map[string]interface{}
-//			msgbytes := []byte(channelMessage.msg)
-//			err := json.Unmarshal(msgbytes, &obj)
-//			if err == nil {
-//				for k, v := range obj {
-//					//message.Fields = append(message.Fields, Field{Name: f.CreateKey(k), Content: fmt.Sprint(v)})
-//					log[k] = v.(string)
-//				}
-//			} else {
-//				logging.LogError("Error unmarshalling", err)
-//				return
-//			}
-//		}
-//
-//		//messages.Messages = append(messages.Messages, message)
-//		payload ,err := json.Marshal(log)
-//		if err == nil {
-//			f.Post(*f.url,*f.token ,payload)
-//		} else {
-//			logging.LogError("Error marshalling", err)
-//		}
-//	}
-//}
 
 func (f *Forwarder) ConsumeMessages() {
 	for channelMessage := range f.channel {
 		channelMessage.eventFields["log"] = channelMessage.msg
-		Logdata,err := json.Marshal(channelMessage.eventFields)
+		Logdata, err := json.Marshal(channelMessage.eventFields)
 		//fmt.Println(fmt.Sprintf("%s",Logdata))
 		if err == nil {
-			f.Post(*f.url,*f.token ,Logdata)
+			f.Post(*f.url, *f.token, Logdata)
 		} else {
 			logging.LogError("Error marshalling", err)
 		}
 	}
 }
 
-
 func (f *Forwarder) Post(url string, token string, payload []byte) {
 	if f.debug {
 		logging.LogStd("Post being sent", true)
 	}
 
-	client := &http.Client {
-	}
+	client := &http.Client{}
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(payload))
 
 	if err != nil {

@@ -1,5 +1,7 @@
 #Disclaimer
 
+## This project is based on https://github.com/vmware-archive/firehose-to-loginsight 
+
 Since v0.0.10 we stop supporting username and password for authentication.
 
 Please use ClientId and ClientSecret.
@@ -30,9 +32,9 @@ Flags:
   --boltdb-path="my.db"        Bolt Database path
   --cc-pull-time=60s           CloudController Polling time in sec
   --extra-fields=""            Extra fields you want to annotate your events with, example: '--extra-fields=env:dev,something:other
-  --insight-server=INSIGHT-SERVER  
+  --insight-server=INSIGHT-SERVER   Default to "data.mgmt.cloud.vmware.com" 
                                log insight server address
-  --insight-server-port=9543   log insight server port
+  --insight-server-port=443   log insight server port
   --insight-server-token="Token here"   log insight server port
   --insight-reserved-fields="event_type"  
                                comma delimited list of fields that are reserved
@@ -44,12 +46,8 @@ Flags:
                                max idle connections per host
   --idle-connection-timeout-seconds=90  
                                seconds for timeout
-  --min-retry-delay=500ms      Doppler Cloud Foundry Doppler min. retry delay duration
-  --max-retry-delay=1m         Doppler Cloud Foundry Doppler max. retry delay duration
-  --max-retry-count=1000       Doppler Cloud Foundry Doppler max. retry Count duration
   --logs-buffer-size=10000     Number of envelope to be buffered
   --enable-stats-server        Will enable stats server on 8080
-  --cc-rps=50                  CloudController Polling request by second
   --orgs=""                    Forwarded on the app logs from theses organisations' example: --orgs=org1,org2
   --ignore-missing-apps        Enable throttling on cache lookup for missing apps
   --version                    Show application version.
@@ -136,8 +134,8 @@ cf push firehose-to-loginsight -c ./firehose-to-loginsight -b binary_buildpack -
 
 ```bash
 cf set-env firehose-to-loginsight API_ENDPOINT https://api.[your cf system domain]
-cf set-env firehose-to-loginsight INSIGHT_SERVER [Your Log Insight IP]
-cf set-env firehose-to-loginsight INSIGHT_SERVER_PORT [Your Log Insight Ingestion Port, defaults to 9543]
+cf set-env firehose-to-loginsight INSIGHT_SERVER [Your Log Insight IP. Default to data.mgmt.cloud.vmware.com]
+cf set-env firehose-to-loginsight INSIGHT_SERVER_PORT [Your Log Insight Ingestion Port, defaults to 443]
 cf set-env firehose-to-loginsight INSIGHT_SERVER_TOKEN [Your Log Insight Token]
 cf set-env firehose-to-loginsight LOG_EVENT_TOTALS true
 cf set-env firehose-to-loginsight LOG_EVENT_TOTALS_TIME "10s"
@@ -157,3 +155,4 @@ cf push firehose-to-loginsight --no-route
 
 * [Caleb Washburn](https://github.com/calebwashburn)
 * [Ian Zink](https://github.com/z4ce)
+* [Mohit Sharma]()
