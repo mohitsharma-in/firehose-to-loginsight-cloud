@@ -113,10 +113,10 @@ uaac client add firehose-to-loginsight \
       --authorities doppler.firehose,cloud_controller.admin_read_only
 ```
 
-## Download the latest release of firehose-to-loginsight from GITHub releases (https://github.com/pivotalservices/firehose-to-loginsight/releases)
+## Download the latest release of firehose-to-loginsight from GITHub releases (https://github.com/mohitsharma-in/firehose-to-loginsight-cloud/releases)
 
 ```bash
-chmod +x firehose-to-loginsight
+chmod +x firehose-to-loginsight-cloud
 ```
 
 ## Utilize the CF cli to authenticate with your PCF instance.
@@ -127,32 +127,32 @@ cf login -a https://api.[your cf system domain] -u [your id] --skip-ssl-validati
 
 ## Push firehose-to-loginsight.
 ```bash
-cf push firehose-to-loginsight -c ./firehose-to-loginsight -b binary_buildpack -u process --no-start
+cf push firehose-to-loginsight-cloud -c ./firehose-to-loginsight-cloud -b binary_buildpack -u process --no-start
 ```
 
 ## Set environment variables with cf cli or in the [manifest.yml](./manifest.yml).
 
 ```bash
-cf set-env firehose-to-loginsight API_ENDPOINT https://api.[your cf system domain]
-cf set-env firehose-to-loginsight INSIGHT_SERVER [Your Log Insight IP. Default to data.mgmt.cloud.vmware.com]
-cf set-env firehose-to-loginsight INSIGHT_SERVER_PORT [Your Log Insight Ingestion Port, defaults to 443]
-cf set-env firehose-to-loginsight INSIGHT_SERVER_TOKEN [Your Log Insight Token]
-cf set-env firehose-to-loginsight LOG_EVENT_TOTALS true
-cf set-env firehose-to-loginsight LOG_EVENT_TOTALS_TIME "10s"
-cf set-env firehose-to-loginsight SKIP_SSL_VALIDATION true
-cf set-env firehose-to-loginsight FIREHOSE_SUBSCRIPTION_ID firehose-to-loginsight
-cf set-env firehose-to-loginsight FIREHOSE_CLIENT_ID  [your doppler.firehose enabled user]
-cf set-env firehose-to-loginsight FIREHOSE_CLIENT_SECRET  [your doppler.firehose enabled user password]
+cf set-env firehose-to-loginsight-cloud API_ENDPOINT https://api.[your cf system domain]
+cf set-env firehose-to-loginsight-cloud INSIGHT_SERVER [Your Log Insight IP. Default to data.mgmt.cloud.vmware.com]
+cf set-env firehose-to-loginsight-cloud INSIGHT_SERVER_PORT [Your Log Insight Ingestion Port, defaults to 443]
+cf set-env firehose-to-loginsight-cloud INSIGHT_SERVER_TOKEN [Your Log Insight Token]
+cf set-env firehose-to-loginsight-cloud LOG_EVENT_TOTALS true
+cf set-env firehose-to-loginsight-cloud LOG_EVENT_TOTALS_TIME "10s"
+cf set-env firehose-to-loginsight-cloud SKIP_SSL_VALIDATION true
+cf set-env firehose-to-loginsight-cloud FIREHOSE_SUBSCRIPTION_ID firehose-to-loginsight
+cf set-env firehose-to-loginsight-cloud FIREHOSE_CLIENT_ID  [your doppler.firehose enabled user]
+cf set-env firehose-to-loginsight-cloud FIREHOSE_CLIENT_SECRET  [your doppler.firehose enabled user password]
 ```
 
 ## Push the app.
 
 ```bash
-cf push firehose-to-loginsight --no-route
+cf push firehose-to-loginsight-cloud --no-route
 ```
 
 # Contributors
 
 * [Caleb Washburn](https://github.com/calebwashburn)
 * [Ian Zink](https://github.com/z4ce)
-* [Mohit Sharma]()
+* [Mohit Sharma](https://github.com/mohitsharma-in)
