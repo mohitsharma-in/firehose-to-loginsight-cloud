@@ -35,52 +35,16 @@ body:
 
 
   - type: textarea
-    id: additional
+    id: environment
     attributes:
       label: Environment Details?
 
   - type: input
     id: version
     attributes:
-      label: Build version?
+      label: Build version
       placeholder: vX.Y.Z
-      description: |
-        Please check using `tanzu version`
     validations:
       required: true
 
-  - type: dropdown
-    id: deployment
-    attributes:
-      label: deployment Type
-      multiple: true
-      options:
-        - Managed Cluster
-        - Unmanaged Cluster
-    validations:
-      required: true
-      
-  - type: dropdown
-    id: infrastrure
-    attributes:
-      label: Infrastructure provider
-      multiple: true
-      options:
-        - AWS
-        - Azure
-        - Docker
-        - vSphere
-    validations:
-      required: true
-      
-  - type: dropdown
-    id: os
-    attributes:
-      label: Opearting System
-      multiple: true
-      options:
-        - Linux
-        - Windows
-        - Mac
-    validations:
-      required: true
+
